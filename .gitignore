@@ -2,3 +2,12 @@ build/
 out/
 .vs/
 *.user
+imgui.ini
+
+# AI検証の証拠・作業フォルダ(巨大・非公開。コミット禁止)
+evidence/
+verification_work/
+stage5-retest/
+
+# 就活・個人情報(GitHub公開対象外)
+docs/private/

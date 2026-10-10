@@ -18,6 +18,23 @@ int main()
 	// 初期化が成功したことを知らせる
 	cout << "GLFW initialize done!" << endl;
 
+	// ウィンドウを作成する。glfwCreateWindowはウィンドウがどのメモリにあるかを指すポインタが返り値。
+	GLFWwindow* window = glfwCreateWindow(800, 600, "shisei-zero-engine", nullptr, nullptr);
+	if (window == nullptr)
+	{
+		cout << "Window generate false..." << endl;
+		// GLFWの終了処理
+		glfwTerminate();
+		return 1;
+	}
+
+	// ウィンドウ生成に成功したと表示
+	cout << "Window generate done!" << endl;
+
+	// ウィンドウの終了処理
+	glfwDestroyWindow(window);
+	cout << "Window format." << endl;
+
 	// GLFWの終了処理。（GLFWは準備でOSから様々なものを借りるため、それを返す）
 	glfwTerminate();
 	cout << "GLFW format." << endl;

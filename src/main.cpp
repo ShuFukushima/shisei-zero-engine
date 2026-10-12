@@ -43,14 +43,21 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	// メインループ（glfwWindowShouldClose()が0ならループ）
+	int frameCount = 0;	// ループ回数を数える変数
 	while (!glfwWindowShouldClose(window))
 	{
 		// たまっているイベントをOS側から取得する関数（マウス操作など）
 		glfwPollEvents();
 
+		// ループ回数を増やす
+		frameCount++;
+
 		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
 		glfwSwapBuffers(window);
 	}
+
+	// ループした回数を出力
+	cout << "Roop Count : " << frameCount << endl;
 
 	// ウィンドウの終了処理
 	glfwDestroyWindow(window);

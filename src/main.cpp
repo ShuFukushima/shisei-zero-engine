@@ -3,7 +3,6 @@
 
 using namespace std;
 
-// テスト
 int main()
 {
 	// GLFWの初期化処理。戻り値はint。
@@ -42,6 +41,16 @@ int main()
 
 	// OpenGLがどのウィンドウに対してグラフィックス描画をするかを指定する（今回なら上で作成したウィンドウ）
 	glfwMakeContextCurrent(window);
+
+	// メインループ（glfwWindowShouldClose()が0ならループ）
+	while (!glfwWindowShouldClose(window))
+	{
+		// たまっているイベントをOS側から取得する関数（マウス操作など）
+		glfwPollEvents();
+
+		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
+		glfwSwapBuffers(window);
+	}
 
 	// ウィンドウの終了処理
 	glfwDestroyWindow(window);

@@ -14,9 +14,16 @@ int main()
 		cout << "GLFW initialize false..." << endl;
 		return 1;
 	}
+	else
+	{
+		// 初期化が成功したことを知らせる
+		cout << "GLFW initialize done!" << endl;
+	}
 
-	// 初期化が成功したことを知らせる
-	cout << "GLFW initialize done!" << endl;
+	// 作成するウィンドウの細かい指示（OpenGLのバージョンや機能）
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// ウィンドウを作成する。glfwCreateWindowはウィンドウがどのメモリにあるかを指すポインタが返り値。
 	GLFWwindow* window = glfwCreateWindow(800, 600, "shisei-zero-engine", nullptr, nullptr);
@@ -27,9 +34,14 @@ int main()
 		glfwTerminate();
 		return 1;
 	}
+	else
+	{
+		// ウィンドウ生成に成功したと表示
+		cout << "Window generate done!" << endl;
+	}
 
-	// ウィンドウ生成に成功したと表示
-	cout << "Window generate done!" << endl;
+	// OpenGLがどのウィンドウに対してグラフィックス描画をするかを指定する（今回なら上で作成したウィンドウ）
+	glfwMakeContextCurrent(window);
 
 	// ウィンドウの終了処理
 	glfwDestroyWindow(window);

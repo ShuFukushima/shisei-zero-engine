@@ -57,7 +57,7 @@ int main()
 	}
 
 	// ループした回数を出力
-	cout << "Roop Count : " << frameCount << endl;
+	cout << "Loop Count : " << frameCount << endl;
 
 	// ウィンドウの終了処理
 	glfwDestroyWindow(window);

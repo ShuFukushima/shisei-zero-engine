@@ -22,8 +22,15 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glfw)
 
 add_executable(shisei-zero src/main.cpp)
+
+# GLAD（OpenGLの関数ポインタを聞いて回る）を使用できるようにする。
+# 自分のコードではなく外部の部品のため、exeのもとになるファイルに混ぜず、別のライブラリにする
+add_library(glad external/glad/src/gl.c)
+# GLFWと違い、pythonがPCにないと構成の際に取ってこれないため、ファイルをexternal/gladに置く方式
+target_include_directories(glad PUBLIC external/glad/include)
+
 # opengl32 は Windows 標準の OpenGL ライブラリ(gl* 関数のリンクに必要)
-target_link_libraries(shisei-zero PRIVATE glfw opengl32)
+target_link_libraries(shisei-zero PRIVATE glad glfw opengl32)
 
 if (MSVC)
     # ソースファイルはUTF-8で書く。/utf-8 を指定してコードページ依存の文字化けを防ぐ

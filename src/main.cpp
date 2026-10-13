@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// キー入力をコールバックに渡す関数
+// キー入力のコールバックの定義
 void callKey(GLFWwindow* window, int firstKeyNum, int num, int pressState, int secondKeyNum)
 {
 	cout << "key number : " << firstKeyNum << " press state : " << pressState << endl;
@@ -16,8 +16,17 @@ void callKey(GLFWwindow* window, int firstKeyNum, int num, int pressState, int s
 	}
 }
 
+// エラーのコールバックの定義
+void callError(int errorNum, const char* expSentence)
+{
+	cout << "GLFW error number : " << errorNum << " " << expSentence << endl;
+}
+
 int main()
 {
+	// GLFWのエラーコールバック関数に呼び出す関数を登録
+	glfwSetErrorCallback(callError);
+
 	// GLFWの初期化処理。戻り値はint。
 	int init = glfwInit();
 	// 初期化が失敗したら停止する
@@ -55,7 +64,7 @@ int main()
 	// OpenGLがどのウィンドウに対してグラフィックス描画をするかを指定する（今回なら上で作成したウィンドウ）
 	glfwMakeContextCurrent(window);
 
-	// コールバック関数にキー入力を監視する関数を登録する
+	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);
 
 	// メインループ（glfwWindowShouldClose()が0ならループ）

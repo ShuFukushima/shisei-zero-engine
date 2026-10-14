@@ -65,6 +65,21 @@ int main()
 	// OpenGLがどのウィンドウに対してグラフィックス描画をするかを指定する（今回なら上で作成したウィンドウ）
 	glfwMakeContextCurrent(window);
 
+	// GLADにOpenGLの関数の場所をいれる（失敗したら戻り値0）
+	int openglVersion = gladLoadGL(glfwGetProcAddress);
+	if (openglVersion == 0)
+	{
+		cout << "glad not get address..." << endl;
+		glfwDestroyWindow(window);
+		glfwTerminate();
+
+		return 1;
+	}
+	else
+	{
+		cout << "glad get address! opengl version : " << GLAD_VERSION_MAJOR(openglVersion) << "." << GLAD_VERSION_MINOR(openglVersion) << endl;
+	}
+
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);
 

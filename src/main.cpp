@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
@@ -83,18 +84,28 @@ int main()
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);
 
-	// 塗りつぶす色を設定する
-	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
+	// GLFW初期化からどれぐらい経ったかの秒数を出す
+	cout << "init time : " << glfwGetTime() << endl;
 
 	// メインループ（glfwWindowShouldClose()が0ならループ）
 	int frameCount = 0;	// ループ回数を数える変数
+	float redValue = 0.0f;	// 赤色の強さ（0～1）
 	while (!glfwWindowShouldClose(window))
 	{
 		// たまっているイベントをOS側から取得する関数（マウス操作など）
 		glfwPollEvents();
 
+		// update
 		// ループ回数を増やす
 		frameCount++;
+
+		// 時間に応じて赤の強さを変える
+		double loopTime = glfwGetTime();
+		double sinValue = sin(loopTime);
+		redValue = sinValue;
+
+		// 塗りつぶす色を設定する
+		glClearColor(redValue, 0.5f, 0.5f, 1.0f);
 
 		// ウィンドウを塗りつぶす
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -105,6 +116,11 @@ int main()
 
 	// ループした回数を出力
 	cout << "Loop Count : " << frameCount << endl;
+
+	// ループ終了時点で何秒か？
+	double loopEndTime = glfwGetTime();
+	cout << "Loop End Time : " << loopEndTime << endl;
+	cout << "1 sec loop : " << frameCount / loopEndTime << endl;
 
 	// ウィンドウの終了処理
 	glfwDestroyWindow(window);

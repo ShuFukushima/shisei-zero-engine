@@ -83,6 +83,9 @@ int main()
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);
 
+	// 塗りつぶす色を設定する
+	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
+
 	// メインループ（glfwWindowShouldClose()が0ならループ）
 	int frameCount = 0;	// ループ回数を数える変数
 	while (!glfwWindowShouldClose(window))
@@ -92,6 +95,9 @@ int main()
 
 		// ループ回数を増やす
 		frameCount++;
+
+		// ウィンドウを塗りつぶす
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
 		glfwSwapBuffers(window);

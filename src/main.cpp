@@ -101,8 +101,8 @@ int main()
 
 		// 時間に応じて赤の強さを変える
 		double loopTime = glfwGetTime();
-		double sinValue = sin(loopTime);
-		redValue = sinValue;
+		double sinValue = (sin(loopTime) * 0.5) + 0.5;
+		redValue = (float)sinValue;
 
 		// 塗りつぶす色を設定する
 		glClearColor(redValue, 0.5f, 0.5f, 1.0f);

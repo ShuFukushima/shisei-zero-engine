@@ -84,6 +84,23 @@ int main()
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);
 
+	// 三角形の頂点を登録する
+	float vertexArray[] = {
+		0.0f, 0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f
+	};
+
+	// 配列全体のバイト数を出力
+	cout << "vertex array bytes : " << sizeof(vertexArray) << endl;
+
+	// オブジェクト（データの置き場所）のIDを確保する
+	GLuint vboID = 0;
+	cout << "vboID befor : " << vboID << endl;
+	// バッファオブジェクト用の使用されていないIDをもらう（個数、IDのいれる場所）
+	glGenBuffers(1, &vboID);
+	cout << "vboID after : " << vboID << endl;
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 

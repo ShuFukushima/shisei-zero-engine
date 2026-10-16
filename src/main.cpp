@@ -110,6 +110,20 @@ int main()
 	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &gpuBufferSize);
 	cout << "now bind buffer size : " << gpuBufferSize << endl;
 
+	// 頂点シェーダーを記述（GLSL この文字列をGPUのドライバがGLSLとして解釈する）
+	const char* vertexShaderCode = R"(#version 330 core
+layout (location = 0) in vec3 vertexInput;
+
+void main()
+{
+	gl_Position = vec4(vertexInput, 1.0);
+}
+)";
+	// 記述できたか確認
+	cout << "----------" << endl;
+	cout << vertexShaderCode;
+	cout << "----------" << endl;
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 

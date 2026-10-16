@@ -101,6 +101,15 @@ int main()
 	glGenBuffers(1, &vboID);
 	cout << "vboID after : " << vboID << endl;
 
+	// 操作するバッファを示す（頂点バッファ用メモリ、メモリのID）
+	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	// 現在バインドされているバッファにデータを送る
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray), vertexArray, GL_STATIC_DRAW);
+	// 今バインドされているバッファは何バイトかを出力
+	GLint gpuBufferSize = 0;
+	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &gpuBufferSize);
+	cout << "now bind buffer size : " << gpuBufferSize << endl;
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 

@@ -124,6 +124,7 @@ void main()
 	cout << vertexShaderCode;
 	cout << "----------" << endl;
 
+	// 頂点シェーダー用
 	// シェーダー1本分の入れ物を作成
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	cout << "vertex shader ID : " << vertexShaderID << endl;
@@ -135,23 +136,97 @@ void main()
 	glCompileShader(vertexShaderID);
 
 	// 正常にコンパイルできたかを尋ねる
-	GLint successShaderCompile = 0;
-	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &successShaderCompile);
-	cout << "shader compile success? : " << successShaderCompile << endl;
+	GLint successVertexShaderCompile = 0;
+	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &successVertexShaderCompile);
+	cout << "vertex shader compile success? : " << successVertexShaderCompile << endl;
 
 	// 失敗した場合にログを受け取る
-	if (successShaderCompile == 0)
+	if (successVertexShaderCompile == 0)
 	{
 		// ログを受け取るための配列を作成
 		char logArray[512];
 		glGetShaderInfoLog(vertexShaderID, 512, nullptr, logArray);
-		cout << "shader compile false..." << endl;
+		cout << "vertex shader compile false..." << endl;
 		cout << logArray << endl;
 	}
 	else
 	{
-		cout << "shader compile success!" << endl;
+		cout << "vertex shader compile success!" << endl;
 	}
+
+	// フラグメントシェーダーを記述
+	const char* fragmentShaderCode = R"(#version 330 core
+out vec4 fragmentColor;
+
+void main()
+{
+	fragmentColor = vec4(0.0, 1.0, 1.0, 1.0);
+}
+)";
+
+	// フラグメントシェーダー用
+	// シェーダー1本分の入れ物を作成
+	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	cout << "fragment shader ID : " << fragmentShaderID << endl;
+
+	// シェーダーオブジェクトにGLSLのコードを渡す
+	glShaderSource(fragmentShaderID, 1, &fragmentShaderCode, nullptr);
+
+	// シェーダーをコンパイルする
+	glCompileShader(fragmentShaderID);
+
+	// 正常にコンパイルできたかを尋ねる
+	GLint successFragmentShaderCompile = 0;
+	glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &successFragmentShaderCompile);
+	cout << "fragment shader compile success? : " << successFragmentShaderCompile << endl;
+
+	// 失敗した場合にログを受け取る
+	if (successFragmentShaderCompile == 0)
+	{
+		// ログを受け取るための配列を作成
+		char logArray[512];
+		glGetShaderInfoLog(fragmentShaderID, 512, nullptr, logArray);
+		cout << "fragment shader compile false..." << endl;
+		cout << logArray << endl;
+	}
+	else
+	{
+		cout << "fragment shader compile success!" << endl;
+	}
+
+	// シェーダープログラム（頂点シェーダーとフラグメントシェーダーをリンクしたもの）を作成する
+	// シェーダープログラムのIDを作成
+	GLuint shaderProgramID = glCreateProgram();
+	cout << "shader program ID : " << shaderProgramID << endl;
+	// シェーダープログラムに取り付ける頂点シェーダーとフラグメントシェーダーを指定
+	glAttachShader(shaderProgramID, vertexShaderID);
+	glAttachShader(shaderProgramID, fragmentShaderID);
+
+	// リンクするシェーダープログラムを指定
+	glLinkProgram(shaderProgramID);
+
+	// 正常にリンクできたかを尋ねる
+	GLint successShaderProgramLink = 0;
+	glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &successShaderProgramLink);
+	cout << "shader program link success? : " << successShaderProgramLink << endl;
+
+	// 失敗した場合にログを受け取る
+	if (successShaderProgramLink == 0)
+	{
+		// ログを受け取るための配列を作成
+		char logArray[512];
+		glGetProgramInfoLog(shaderProgramID, 512, nullptr, logArray);
+		cout << "shader program link false..." << endl;
+		cout << logArray << endl;
+	}
+	else
+	{
+		cout << "shader program link success!" << endl;
+	}
+
+	// リンクが終了し不要になったシェーダーオブジェクトを破棄する
+	glDeleteShader(vertexShaderID);
+	glDeleteShader(fragmentShaderID);
 
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
@@ -178,6 +253,9 @@ void main()
 
 		// ウィンドウを塗りつぶす
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// 使用するシェーダープログラムを指定する
+		glUseProgram(shaderProgramID);
 
 		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
 		glfwSwapBuffers(window);

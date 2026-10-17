@@ -139,6 +139,20 @@ void main()
 	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &successShaderCompile);
 	cout << "shader compile success? : " << successShaderCompile << endl;
 
+	// 失敗した場合にログを受け取る
+	if (successShaderCompile == 0)
+	{
+		// ログを受け取るための配列を作成
+		char logArray[512];
+		glGetShaderInfoLog(vertexShaderID, 512, nullptr, logArray);
+		cout << "shader compile false..." << endl;
+		cout << logArray << endl;
+	}
+	else
+	{
+		cout << "shader compile success!" << endl;
+	}
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 

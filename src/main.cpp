@@ -124,6 +124,21 @@ void main()
 	cout << vertexShaderCode;
 	cout << "----------" << endl;
 
+	// シェーダー1本分の入れ物を作成
+	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	cout << "vertex shader ID : " << vertexShaderID << endl;
+
+	// シェーダーオブジェクトにGLSLのコードを渡す
+	glShaderSource(vertexShaderID, 1, &vertexShaderCode, nullptr);
+
+	// シェーダーをコンパイルする
+	glCompileShader(vertexShaderID);
+
+	// 正常にコンパイルできたかを尋ねる
+	GLint successShaderCompile = 0;
+	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &successShaderCompile);
+	cout << "shader compile success? : " << successShaderCompile << endl;
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 

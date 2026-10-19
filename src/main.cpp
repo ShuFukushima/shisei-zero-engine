@@ -268,6 +268,9 @@ void main()
 		// 使用するシェーダープログラムを指定する
 		glUseProgram(shaderProgramID);
 
+		// 三角形を描画する
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
 		glfwSwapBuffers(window);
 	}

@@ -50,6 +50,7 @@
 | 2026-10-17 | M1 第23回(後半)(完了) | 学習 | 0.25h | なし(申告は14分。コンパイルに失敗したら glGetShaderInfoLog でログを受け取って出す if と else を書いた。; を消す、gl_Position の綴りを変える、vec4 を使わずに代入する、コンパイルさせずに尋ねる、の4つの実験でログを読んだ。ログの行の番号がコンパイラの気付いた場所なことと、失敗しても抜けない理由は、仕上げで1往復ずつして言えた) |
 | 2026-10-17 | M1 第24回(前半)(完了) | 学習 | 0.25h | なし(申告は19分。フラグメントシェーダーの7行を書き、頂点シェーダーと同じ手順でコンパイルさせて結果 1 を出した。最初は glGetShaderiv の ID の変数を変え忘れていて、問いを1つ返したところで自分で見つけて直した) |
 | 2026-10-17 | M1 第24回(後半)(完了) | 学習 | 0.25h | なし(申告は22分。glCreateProgram、glAttachShader、glLinkProgram で2本を1組にリンクし、glGetProgramiv で結果 1 を出した。glDeleteShader で2本を片付け、while の中で glUseProgram を呼んだ。main の綴り、; を消す、vec3 を代入する、リンクさせずに尋ねる、の4つの実験でログを読んだ) |
+| 2026-10-19 | M1 第25回(前半)(完了) | 学習 | 0.50h | なし(申告は25分。glGenVertexArrays と glBindVertexArray で VAO を作り、glVertexAttribPointer と glEnableVertexAttribArray で、VBO の数を3個ずつ0番の入力へ読む読み方を教えた。glVertexAttribPointer の1番目と、読む相手の VBO の決まり方は、仕上げで問いを返して言えた) |
 
 記帳規則:
 

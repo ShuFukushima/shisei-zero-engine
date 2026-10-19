@@ -228,6 +228,17 @@ void main()
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
 
+	// VAO（VBOをどう読めばいいか）を作成し、バインドする
+	GLuint vaoID = 0;
+	glGenVertexArrays(1, &vaoID);
+	cout << "vao ID : " << vaoID << endl;
+	// VAOをバインドする
+	glBindVertexArray(vaoID);
+	// 読み方を教える
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	// 0番の入力を有効化する
+	glEnableVertexAttribArray(0);
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 

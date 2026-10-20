@@ -88,6 +88,14 @@ int main()
 	bool debugCtx = (flags & GL_CONTEXT_FLAG_DEBUG_BIT) != 0;	// フラグ情報から、デバッグビットのビットだけを取り出し、1か0かを判断する
 	std::cout << "debug context: " << (debugCtx ? "yes" : "no") << "\n";
 	cout << "flags : " << flags << endl;
+	// デバッグコンテキストである　かつ　GL_KHR_debugが使用できるなら
+	if (debugCtx && GLAD_GL_KHR_debug) {
+		// OpenGLの機能を1ついれる関数
+		// 報告機能そのもの
+		glEnable(GL_DEBUG_OUTPUT);
+		// 報告を、原因となった命令のその場で行わせる機能
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	}
 
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);

@@ -53,6 +53,7 @@
 | 2026-10-19 | M1 第25回(前半)(完了) | 学習 | 0.50h | なし(申告は25分。glGenVertexArrays と glBindVertexArray で VAO を作り、glVertexAttribPointer と glEnableVertexAttribArray で、VBO の数を3個ずつ0番の入力へ読む読み方を教えた。glVertexAttribPointer の1番目と、読む相手の VBO の決まり方は、仕上げで問いを返して言えた) |
 | 2026-10-19 | M1 第25回(後半)(完了) | 学習 | 0.25h | なし(申告は16分。while の中で glDrawArrays を呼び、自分で決めた座標と色の三角形を窓に出した。番号や順番を壊す実験で、エラーも出ずに三角形だけが消えることを確かめた。仕上げの1問目と3問目は、問いを返して言えた) |
 | 2026-10-20 | M1 第26回(前半)(完了) | 学習 | 0.25h | なし(申告は18分。glfwWindowHint でデバッグコンテキストを注文し、注文が通ったかを glGetIntegerv で机に尋ねて、起動のたびに debug context: yes を出した。flags の数は 2。仕上げの3問目の後ろ半分は、問いを返して言えた) |
+| 2026-10-20 | M1 第26回(後半)(完了) | 学習 | 0.25h | なし(申告は11分。GLAD_GL_KHR_debug を確かめてから glEnable で報告の機能をオンにした。注文の行を窓を作った後へ移すと、エラーも出ずに debug context: no になることを確かめた。仕上げの1問目の後ろ半分は、問いを返して言えた) |
 
 記帳規則:
 

@@ -47,6 +47,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_DEBUG, GLFW_TRUE);	// 間違いの報告を行う特別な机を使用する
 
 	// ウィンドウを作成する。glfwCreateWindowはウィンドウがどのメモリにあるかを指すポインタが返り値。
 	GLFWwindow* window = glfwCreateWindow(800, 600, "shisei-zero-engine", nullptr, nullptr);
@@ -80,6 +81,13 @@ int main()
 	{
 		cout << "glad get address! opengl version : " << GLAD_VERSION_MAJOR(openglVersion) << "." << GLAD_VERSION_MINOR(openglVersion) << endl;
 	}
+
+	// デバッグコンテキストがオンになっているかチェック
+	GLint flags = 0;
+	glGetIntegerv(GL_CONTEXT_FLAGS, &flags);	// このコンテキストにおけるデバッグコンテキストがオンになってるかを出力引数に渡す
+	bool debugCtx = (flags & GL_CONTEXT_FLAG_DEBUG_BIT) != 0;	// フラグ情報から、デバッグビットのビットだけを取り出し、1か0かを判断する
+	std::cout << "debug context: " << (debugCtx ? "yes" : "no") << "\n";
+	cout << "flags : " << flags << endl;
 
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);

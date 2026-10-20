@@ -18,6 +18,15 @@ void callKey(GLFWwindow* window, int firstKeyNum, int num, int pressState, int s
 	}
 }
 
+// OpenGLが呼ぶエラー時のコールバック関数
+// APIENTRY：Windowsで「関数の呼び方の取り決め」を、呼ぶ側・呼ばれる側で合わせるための印
+void APIENTRY onGlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity,
+	GLsizei length, const GLchar* message, const void* userParam)
+{
+	cerr << "OpenGL error : " << "source : " << source << " type : " << type << " id : " << id << " severity : " << severity << endl;
+	cerr << "message : " << message << endl;
+}
+
 // エラーのコールバックの定義
 void callError(int errorNum, const char* expSentence)
 {
@@ -95,6 +104,8 @@ int main()
 		glEnable(GL_DEBUG_OUTPUT);
 		// 報告を、原因となった命令のその場で行わせる機能
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		// 報告を受け取るコールバックを登録する関数
+		glDebugMessageCallback(onGlDebugMessage, nullptr);
 	}
 
 	// コールバック関数にキー入力時の処理を記述した関数を登録

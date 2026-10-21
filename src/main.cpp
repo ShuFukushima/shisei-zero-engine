@@ -33,6 +33,15 @@ void callError(int errorNum, const char* expSentence)
 	cout << "GLFW error number : " << errorNum << " " << expSentence << endl;
 }
 
+// ウィンドウの大きさ変更時に呼ばれるコールバック関数
+void changeWindowSize(GLFWwindow* window, int width, int height)
+{
+	// 受け取った幅と高さを出力
+	cout << "window size  width : " << width << " height : " << height << endl;
+	// ビューポートを設定し、描画する範囲を設定し直す
+	glViewport(0, 0, width, height);
+}
+
 int main()
 {
 	// GLFWのエラーコールバック関数に呼び出す関数を登録
@@ -91,6 +100,12 @@ int main()
 		cout << "glad get address! opengl version : " << GLAD_VERSION_MAJOR(openglVersion) << "." << GLAD_VERSION_MINOR(openglVersion) << endl;
 	}
 
+	// ウィンドウの初期状態の大きさをチェック
+	int windowWidth = 0;
+	int windowHeight = 0;
+	glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+	cout << "window size  width : " << windowWidth << " height : " << windowHeight << endl;
+
 	// デバッグコンテキストがオンになっているかチェック
 	GLint flags = 0;
 	glGetIntegerv(GL_CONTEXT_FLAGS, &flags);	// このコンテキストにおけるデバッグコンテキストがオンになってるかを出力引数に渡す
@@ -110,6 +125,8 @@ int main()
 
 	// コールバック関数にキー入力時の処理を記述した関数を登録
 	glfwSetKeyCallback(window, callKey);
+	// コールバック関数にウィンドウサイズが変更されたときの処理を記述した関数を登録
+	glfwSetFramebufferSizeCallback(window, changeWindowSize);
 
 	// 三角形の頂点を登録する
 	float vertexArray[] = {

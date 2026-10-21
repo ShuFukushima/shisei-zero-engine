@@ -201,10 +201,11 @@ void main()
 	// フラグメントシェーダーを記述
 	const char* fragmentShaderCode = R"(#version 330 core
 out vec4 fragmentColor;
+uniform vec4 uChangeColor;
 
 void main()
 {
-	fragmentColor = vec4(0.0, 1.0, 1.0, 1.0);
+	fragmentColor = uChangeColor;
 }
 )";
 
@@ -283,6 +284,10 @@ void main()
 	// 0番の入力を有効化する
 	glEnableVertexAttribArray(0);
 
+	// シェーダープログラムのuniformに値を入れる
+	GLint fragmentVarNum = glGetUniformLocation(shaderProgramID, "uChangeColor");	// GLSLにおける変数の番号を受け取るこの時、フラグメントシェーダーではなくシェーダープログラムのIDをいれる点に注意
+	cout << "uChangeColor is " << fragmentVarNum << endl;
+
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
 
@@ -302,6 +307,8 @@ void main()
 		double loopTime = glfwGetTime();
 		double sinValue = (sin(loopTime) * 0.5) + 0.5;
 		redValue = (float)sinValue;
+		// 時間に応じて行き来するfloat
+		float blueValue = (float)sinValue;
 
 		// 塗りつぶす色を設定する
 		glClearColor(redValue, 0.5f, 0.5f, 1.0f);
@@ -311,6 +318,9 @@ void main()
 
 		// 使用するシェーダープログラムを指定する
 		glUseProgram(shaderProgramID);
+
+		// シェーダープログラムの色を実際にC++から変更する
+		glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
 
 		// 三角形を描画する
 		glDrawArrays(GL_TRIANGLES, 0, 3);

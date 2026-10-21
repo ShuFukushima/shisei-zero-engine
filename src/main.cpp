@@ -130,9 +130,9 @@ int main()
 
 	// 三角形の頂点を登録する
 	float vertexArray[] = {
-		0.0f, 0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f
+		0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	// 配列全体のバイト数を出力
@@ -280,7 +280,7 @@ void main()
 	// VAOをバインドする
 	glBindVertexArray(vaoID);
 	// 読み方を教える
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);
 	// 0番の入力を有効化する
 	glEnableVertexAttribArray(0);
 

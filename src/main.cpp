@@ -1,4 +1,5 @@
 #include <iostream>
+#include <filesystem>
 #include <cmath>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -44,6 +45,9 @@ void changeWindowSize(GLFWwindow* window, int width, int height)
 
 int main()
 {
+	// 作業ディレクトリを出力する
+	cout << "cwd : " << filesystem::current_path() << endl;
+
 	// GLFWのエラーコールバック関数に呼び出す関数を登録
 	glfwSetErrorCallback(callError);
 

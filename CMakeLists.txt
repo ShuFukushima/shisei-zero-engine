@@ -36,3 +36,14 @@ if (MSVC)
     # ソースファイルはUTF-8で書く。/utf-8 を指定してコードページ依存の文字化けを防ぐ
     target_compile_options(shisei-zero PRIVATE /utf-8)
 endif()
+
+# stb_image.h を探す場所
+target_include_directories(shisei-zero PRIVATE external/stb)
+
+# assets フォルダを、exe のあるフォルダの隣へ複製する(ビルドのたびに行う)
+add_custom_target(copy-assets ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/assets
+            $<TARGET_FILE_DIR:shisei-zero>/assets
+)
+add_dependencies(shisei-zero copy-assets)

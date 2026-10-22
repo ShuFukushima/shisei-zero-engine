@@ -294,6 +294,17 @@ void main()
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
+	// EBO(Element Buffer Object 番号をGPUに送る)
+	// IDをもらう
+	GLuint eboID = 0;
+	glGenBuffers(1, &eboID);
+	// EBOをGL_ELEMENT_ARRAY_BUFFERにバインド
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+	// バインドした場所に番号の配列を送る
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triangleVer), triangleVer, GL_STATIC_DRAW);
+	cout << "eboID : " << eboID << endl;
+
+
 	// シェーダープログラムのuniformに値を入れる
 	//GLint fragmentVarNum = glGetUniformLocation(shaderProgramID, "uChangeColor");	// GLSLにおける変数の番号を受け取るこの時、フラグメントシェーダーではなくシェーダープログラムのIDをいれる点に注意
 	//cout << "uChangeColor is " << fragmentVarNum << endl;
@@ -333,7 +344,11 @@ void main()
 		//glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
 
 		// 三角形を描画する
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		// 矩形を描画する
+		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
+		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
 
 		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
 		glfwSwapBuffers(window);

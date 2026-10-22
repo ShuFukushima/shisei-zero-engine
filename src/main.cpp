@@ -128,12 +128,15 @@ int main()
 	// コールバック関数にウィンドウサイズが変更されたときの処理を記述した関数を登録
 	glfwSetFramebufferSizeCallback(window, changeWindowSize);
 
-	// 三角形の頂点を登録する
+	// 矩形の頂点を登録する
 	float vertexArray[] = {
-		0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f
 	};
+	
+	unsigned int triangleVer[6] = { 0, 1, 2, 0, 2, 3 };
 
 	// 配列全体のバイト数を出力
 	cout << "vertex array bytes : " << sizeof(vertexArray) << endl;
@@ -157,10 +160,15 @@ int main()
 	// 頂点シェーダーを記述（GLSL この文字列をGPUのドライバがGLSLとして解釈する）
 	const char* vertexShaderCode = R"(#version 330 core
 layout (location = 0) in vec3 vertexInput;
+layout (location = 1) in vec3 vertexColor;
+
+out vec3 verColorOut;
 
 void main()
 {
 	gl_Position = vec4(vertexInput, 1.0);
+
+	verColorOut = vertexColor;
 }
 )";
 	// 記述できたか確認
@@ -200,12 +208,12 @@ void main()
 
 	// フラグメントシェーダーを記述
 	const char* fragmentShaderCode = R"(#version 330 core
+in vec3 verColorOut;
 out vec4 fragmentColor;
-uniform vec4 uChangeColor;
 
 void main()
 {
-	fragmentColor = uChangeColor;
+	fragmentColor = vec4(verColorOut, 1.0);
 }
 )";
 
@@ -280,13 +288,15 @@ void main()
 	// VAOをバインドする
 	glBindVertexArray(vaoID);
 	// 読み方を教える
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);
-	// 0番の入力を有効化する
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);					// 頂点の位置
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));	// 頂点の色
+	// 0番と1番の入力を有効化する
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 	// シェーダープログラムのuniformに値を入れる
-	GLint fragmentVarNum = glGetUniformLocation(shaderProgramID, "uChangeColor");	// GLSLにおける変数の番号を受け取るこの時、フラグメントシェーダーではなくシェーダープログラムのIDをいれる点に注意
-	cout << "uChangeColor is " << fragmentVarNum << endl;
+	//GLint fragmentVarNum = glGetUniformLocation(shaderProgramID, "uChangeColor");	// GLSLにおける変数の番号を受け取るこの時、フラグメントシェーダーではなくシェーダープログラムのIDをいれる点に注意
+	//cout << "uChangeColor is " << fragmentVarNum << endl;
 
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;
@@ -320,7 +330,7 @@ void main()
 		glUseProgram(shaderProgramID);
 
 		// シェーダープログラムの色を実際にC++から変更する
-		glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
+		//glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
 
 		// 三角形を描画する
 		glDrawArrays(GL_TRIANGLES, 0, 3);

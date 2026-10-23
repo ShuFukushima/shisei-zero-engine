@@ -3,6 +3,8 @@
 #include <cmath>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#define STB_IMAGE_IMPLEMENTATION	// この行がないとstb_image内のヘッダーだけ読まれる
+#include "stb_image.h"
 
 using namespace std;
 
@@ -312,6 +314,43 @@ void main()
 	// シェーダープログラムのuniformに値を入れる
 	//GLint fragmentVarNum = glGetUniformLocation(shaderProgramID, "uChangeColor");	// GLSLにおける変数の番号を受け取るこの時、フラグメントシェーダーではなくシェーダープログラムのIDをいれる点に注意
 	//cout << "uChangeColor is " << fragmentVarNum << endl;
+
+	// 画像データを読み込む
+	int imageWidth = 0;
+	int imageHeight = 0;
+	int imageChannel = 0;
+	// 画像データを配列化する
+	unsigned char* imageArray = stbi_load("assets/imageTest.png", &imageWidth, &imageHeight, &imageChannel, 4);
+	if (imageArray == nullptr)
+	{
+		cout << "image load failed..." << endl;
+		cout << "fail reason : " << stbi_failure_reason() << endl;
+		glfwTerminate();
+		return 1;
+	}
+	else
+	{
+		cout << "image  width : " << imageWidth << " height : " << imageHeight << " channel : " << imageChannel << endl;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		cout << "imageArray[" << i << "] : " << (int)imageArray[i] << endl;
+	}
+
+	// 画像の配列情報をGPU側に送る
+	GLuint imageTexID = 0;
+	glGenTextures(1, &imageTexID);
+	glBindTexture(GL_TEXTURE_2D, imageTexID);
+	cout << "image texture ID : " << imageTexID << endl;
+	// テクスチャの使われ方を設定する
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// stbi_loadが返したポインタを受け取り、指す色の並びを開放する
+	stbi_image_free(imageArray);
 
 	// GLFW初期化からどれぐらい経ったかの秒数を出す
 	cout << "init time : " << glfwGetTime() << endl;

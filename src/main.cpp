@@ -134,12 +134,12 @@ int main()
 	// コールバック関数にウィンドウサイズが変更されたときの処理を記述した関数を登録
 	glfwSetFramebufferSizeCallback(window, changeWindowSize);
 
-	// 矩形の頂点を登録する
+	// 要点配列を格納する（位置が3つ、テクスチャ座標2つ）
 	float vertexArray[] = {
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f
 	};
 	
 	unsigned int triangleVer[6] = { 0, 1, 2, 0, 2, 3 };
@@ -294,8 +294,8 @@ void main()
 	// VAOをバインドする
 	glBindVertexArray(vaoID);
 	// 読み方を教える
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);					// 頂点の位置
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));	// 頂点の色
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);					// 頂点の位置
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));	// 頂点の色
 	// 0番と1番の入力を有効化する
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -348,7 +348,10 @@ void main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	// 色の並びをGPUに送る
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageArray);
+	// 縮小版の絵（ミップマップ）を作らせる
+	glGenerateMipmap(GL_TEXTURE_2D);
 	// stbi_loadが返したポインタを受け取り、指す色の並びを開放する
 	stbi_image_free(imageArray);
 
@@ -379,6 +382,9 @@ void main()
 
 		// ウィンドウを塗りつぶす
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// 念のためもう一度使用するテクスチャをバインドする
+		glBindTexture(GL_TEXTURE_2D, imageTexID);
 
 		// 使用するシェーダープログラムを指定する
 		glUseProgram(shaderProgramID);

@@ -47,6 +47,7 @@ void changeWindowSize(GLFWwindow* window, int width, int height)
 
 int main()
 {
+	// -----ここから始まり-----
 	// 作業ディレクトリを出力する
 	cout << "cwd : " << filesystem::current_path() << endl;
 
@@ -364,12 +365,16 @@ void main()
 	// メインループ（glfwWindowShouldClose()が0ならループ）
 	int frameCount = 0;	// ループ回数を数える変数
 	float redValue = 0.0f;	// 赤色の強さ（0～1）
+
+	// -----ここから毎フレーム-----
+
 	while (!glfwWindowShouldClose(window))
 	{
+		// ----- poll input -----
 		// たまっているイベントをOS側から取得する関数（マウス操作など）
 		glfwPollEvents();
 
-		// update
+		// ----- update -----
 		// ループ回数を増やす
 		frameCount++;
 
@@ -380,6 +385,7 @@ void main()
 		// 時間に応じて行き来するfloat
 		float blueValue = (float)sinValue;
 
+		// ----- render -----
 		// 塗りつぶす色を設定する
 		glClearColor(redValue, 0.5f, 0.5f, 1.0f);
 
@@ -402,9 +408,12 @@ void main()
 		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
 
+		// ----- present -----
 		// 描く絵を切り替える（ダブルバッファ。OpenGLはバックバッファに描く）
 		glfwSwapBuffers(window);
 	}
+
+	// ------ここから終わり------
 
 	// ループした回数を出力
 	cout << "Loop Count : " << frameCount << endl;
@@ -413,6 +422,26 @@ void main()
 	double loopEndTime = glfwGetTime();
 	cout << "Loop End Time : " << loopEndTime << endl;
 	cout << "1 sec loop : " << frameCount / loopEndTime << endl;
+
+	// テクスチャの終了処理
+	glDeleteTextures(1, &imageTexID);
+	cout << "texture deleted!" << endl;
+
+	// EBOの終了処理
+	glDeleteBuffers(1, &eboID);
+	cout << "EBO deleted!" << endl;
+
+	// VAOの終了処理
+	glDeleteVertexArrays(1, &vaoID);
+	cout << "VAO deleted!" << endl;
+
+	// シェーダープログラムの終了処理
+	glDeleteProgram(shaderProgramID);
+	cout << "shader program deleted!" << endl;
+
+	// VBOの終了処理
+	glDeleteBuffers(1, &vboID);
+	cout << "VBO deleted!" << endl;
 
 	// ウィンドウの終了処理
 	glfwDestroyWindow(window);

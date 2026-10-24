@@ -134,7 +134,7 @@ int main()
 	// コールバック関数にウィンドウサイズが変更されたときの処理を記述した関数を登録
 	glfwSetFramebufferSizeCallback(window, changeWindowSize);
 
-	// 要点配列を格納する（位置が3つ、テクスチャ座標2つ）
+	// 頂点配列を格納する（位置が3つ、テクスチャ座標2つ）
 	float vertexArray[] = {
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -166,15 +166,15 @@ int main()
 	// 頂点シェーダーを記述（GLSL この文字列をGPUのドライバがGLSLとして解釈する）
 	const char* vertexShaderCode = R"(#version 330 core
 layout (location = 0) in vec3 vertexInput;
-layout (location = 1) in vec3 vertexColor;
+layout (location = 1) in vec2 texturePos;
 
-out vec3 verColorOut;
+out vec2 texturePosOut;
 
 void main()
 {
 	gl_Position = vec4(vertexInput, 1.0);
 
-	verColorOut = vertexColor;
+	texturePosOut = texturePos;
 }
 )";
 	// 記述できたか確認
@@ -214,12 +214,13 @@ void main()
 
 	// フラグメントシェーダーを記述
 	const char* fragmentShaderCode = R"(#version 330 core
-in vec3 verColorOut;
+in vec2 texturePosOut;
+uniform sampler2D useTex;
 out vec4 fragmentColor;
 
 void main()
 {
-	fragmentColor = vec4(verColorOut, 1.0);
+	fragmentColor = texture(useTex, texturePosOut);
 }
 )";
 
@@ -319,6 +320,8 @@ void main()
 	int imageWidth = 0;
 	int imageHeight = 0;
 	int imageChannel = 0;
+	// 配列の読む順番を反対にする
+	stbi_set_flip_vertically_on_load(1);
 	// 画像データを配列化する
 	unsigned char* imageArray = stbi_load("assets/imageTest.png", &imageWidth, &imageHeight, &imageChannel, 4);
 	if (imageArray == nullptr)

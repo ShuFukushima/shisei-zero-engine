@@ -26,10 +26,11 @@ Mat4 model = Mat4::translate(pos) * Mat4::rotate(angle, axis);  // 合成は自�
 | `glm::translate(m, v)` | `m * Mat4::translate(v)` | 合成は自分で掛ける(上記) |
 | `glm::rotate(m, rad, axis)` | `m * Mat4::rotate(rad, axis)` | 同上。どちらも角度はラジアン |
 | `glm::scale(m, v)` | `m * Mat4::scale(v)` | 同上 |
-| `glm::perspective(fovy, aspect, near, far)` | `Mat4::perspective(fovy, aspect, near, far)` | 同じ引数順。fovyはラジアン |
+| `glm::perspective(fovy, aspect, near, far)` | `Mat4::perspective(fovY, aspect, nearZ, farZ)` | 同じ引数順。fovYはラジアン。自作の引数名が`nearZ`/`farZ`なのは、Windowsのヘッダーが`near`/`far`という名前を消すため |
 | `glm::lookAt(eye, center, up)` | `Mat4::lookAt(eye, center, up)` | |
+| `glm::transpose(m)` | `transpose(m)` | 自作も`Mat4`の外の関数で、同じ呼び方。回転だけの表なら、転置が逆行列 |
 | `glm::value_ptr(m)` | `m.m`(float配列をそのまま渡す) | どちらも列優先 → glUniformMatrix4fv の transpose は常に **GL_FALSE** |
 | `glm::vec3` | `Vec3` | |
-| `glm::normalize(v)` | `v.normalized()` | **自作は長さ0でゼロ除算する(チェックしない設計)**。カメラでは pitch±89°クランプで長さ0を作らせない |
-| `glm::dot(a, b)` / `glm::cross(a, b)` | `a.dot(b)` / `a.cross(b)` | 自作はメンバ関数 |
+| `glm::normalize(v)` | `normalize(v)` | 自作も`Vec3`の外の関数で、同じ呼び方。**自作は長さが0とみなせるとき、割らずにゼロベクトルを返す**。カメラの前と上がそろうと右がゼロベクトルになり、カメラの表が壊れるので、カメラでは pitch±89°クランプでそろえさせない |
+| `glm::dot(a, b)` / `glm::cross(a, b)` | `dot(a, b)` / `cross(a, b)` | 自作も`Vec3`の外の関数で、同じ呼び方 |
 | `glm::radians(deg)` | `deg * PI / 180.0f`(PIは自前定数) | MSVCの`M_PI`は`_USE_MATH_DEFINES`必須の罠があるため自前定数を推奨 |

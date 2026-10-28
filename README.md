@@ -4,12 +4,12 @@ C++ と OpenGL で「GPUはどうやって絵を出すのか」を理解しな�
 
 ## スクリーンショット / GIF
 
-未作成（M5のRelease版完成時に追加予定）。現在は準備中です。
+![M1終了時点での状態](docs/images/M1GoalScreenShot.png)
 
 ## 現在地 / ロードマップ
 
-- [ ] M0: 計画策定・環境準備（公開前の検証と封印を含む。現在は未完）
-- [ ] M1: 三角形・シェーダー・テクスチャ — まず絵を出す (2026-09)
+- [x] M0: 計画策定・環境準備（公開前の検証と封印を含む。）
+- [x] M1: 三角形・シェーダー・テクスチャ — まず絵を出す (2026-09)
 - [ ] M2: 自作3D数学ライブラリ (2026-09〜10)
 - [ ] M3: 透視投影カメラで3D空間を飛び回る (2026-10〜11)
 - [ ] M4: Phongライティング → OBJモデル読み込み(パーサー自作) (2026-11〜12)
@@ -24,12 +24,21 @@ Windows / Visual Studio(C++ワークロード。同梱のCMake+Ninjaを使用) /
 
 ```text
 ビルド: powershell -ExecutionPolicy Bypass -File scripts\build.ps1 -Path . -Run
-操作: M5実装前のため未確定。M5完成時に記載します。
+操作: ビルドするとウィンドウが表示されます。ウィンドウをドラッグすると大きさを変更できます。Escボタンかウィンドウ右上の×ボタンでエンジンを閉じることができます。
 ```
 
 または Visual Studio の「フォルダーを開く」でこのフォルダを開いてもビルドできます。
 cmake がPATHにある環境なら `cmake -S . -B build && cmake --build build` でも可。
 依存ライブラリ(GLFW 3.4)は CMake の FetchContent が自動取得します。
+依存ライブラリ（GLAD 2.0.8・stb_image 2.30）は手動で導入します。
+
+## 使用している外部部品とライセンス
+- GLFW / 3.4 / zlib/libpng / https://www.glfw.org/license.html / 2026年10月28日
+- GLAD / 2.0.8 / (WTFPL OR CC0-1.0) AND Apache-2.0 / ヘッダー内記載 / 2026年10月28日
+- stb_image / 2.30 / MIT License OR Public Domain / ヘッダー内記載 / 2026年10月28日
+
+## 使用素材
+- assets内の画像は自分で描いた
 
 ## このプロジェクトの約束事(AI使用ポリシー)
 

@@ -54,10 +54,3 @@ add_custom_target(copy-assets ALL
             $<TARGET_FILE_DIR:shisei-zero>/assets
 )
 add_dependencies(shisei-zero copy-assets)
-
-# 数学テストを行う用の別exe
-add_executable(math-tests tests/test_math.cpp)
-target_include_directories(math-tests PRIVATE src)
-if (MSVC)
-    target_compile_options(math-tests PRIVATE /utf-8)
-endif()

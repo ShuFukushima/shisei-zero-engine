@@ -54,3 +54,43 @@ inline std::ostream& operator<< (std::ostream& out, const Vec3& v)
 	out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
 	return out;
 }
+
+inline float dot(const Vec3& a, const Vec3& b)
+{
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
+inline Vec3 cross(const Vec3& a, const Vec3& b)
+{
+	float x = (a.y * b.z) - (a.z * b.y);
+	float y = (a.z * b.x) - (a.x * b.z);
+	float z = (a.x * b.y) - (a.y * b.x);
+
+	return Vec3(x, y, z);
+}
+
+inline bool nearlyEqual(float a, float b)
+{
+	if (std::fabs(a - b) < 0.00001f)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+inline Vec3 normalize(const Vec3& a)
+{
+	float length = a.length();
+	
+	if (nearlyEqual(length, 0.0f))
+	{
+		return Vec3();
+	}
+	else
+	{
+		return Vec3(a.x * (1.0f / length), a.y * (1.0f / length), a.z * (1.0f / length));
+	}
+}

@@ -88,6 +88,41 @@ void testMat4()
 			}
 		}
 	}
+	Mat4 matMultiA = Mat4::identity();
+	matMultiA.m[0] = 2.0f;
+	Mat4 matMultiB = Mat4::identity();
+	matMultiB.m[0] = 0.0f;
+	matMultiB.m[1] = 1.0f;
+	matMultiB.m[4] = -1.0f;
+	matMultiB.m[5] = 0.0f;
+	Mat4 ab = matMultiA * matMultiB;
+	Mat4 ba = matMultiB * matMultiA;
+	assert(ab.m[0] == 0.0f);
+	assert(ab.m[1] == 1.0f);
+	assert(ab.m[4] == -2.0f);
+	assert(ab.m[5] == 0.0f);
+	assert(ba.m[0] == 0.0f);
+	assert(ba.m[1] == 2.0f);
+	assert(ba.m[4] == -1.0f);
+	assert(ba.m[5] == 0.0f);
+	Mat4 g;
+	for (int i = 0; i < 16; i++)
+	{
+		g.m[i] = (float)i + 1.0f;
+	}
+	Mat4 gIdn = g * identityM4;
+	for (int i = 0; i < 16; i++)
+	{
+		assert(gIdn.m[i] == (float)i + 1.0f);
+	}
+	Mat4 idnG = identityM4 * g;
+	for (int i = 0; i < 16; i++)
+	{
+		assert(idnG.m[i] == (float)i + 1.0f);
+	}
+	Mat4 g2 = g * g;
+	assert(g2.m[0] == 90.0f);
+	assert(g2.m[5] == 228.0f);
 }
 
 int main()

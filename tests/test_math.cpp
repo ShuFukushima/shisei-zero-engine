@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Vec3.h"
+#include "Mat4.h"
 #include <assert.h>
 
 void testVec3()
@@ -65,9 +66,34 @@ void testVec3()
 	assert(nearlyEqual(dot(crossAB, normalB), 0.0f));
 }
 
+void testMat4()
+{
+	Mat4 zeroMat4;
+	for (int i = 0; i < 16; i++)
+	{
+		assert(zeroMat4.m[i] == 0.0f);
+	}
+	Mat4 identityM4 = Mat4::identity();
+	for (int col = 0; col < 4; col++)
+	{
+		for (int row = 0; row < 4; row++)
+		{
+			if (col == row)
+			{
+				assert(identityM4.m[col * 4 + row] == 1.0f);
+			}
+			else
+			{
+				assert(identityM4.m[col * 4 + row] == 0.0f);
+			}
+		}
+	}
+}
+
 int main()
 {
 	testVec3();
+	testMat4();
 	std::cout << "all tests passed" << std::endl;
 
 	return 0;

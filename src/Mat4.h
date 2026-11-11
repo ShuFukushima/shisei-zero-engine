@@ -1,5 +1,8 @@
 #pragma once
+#include <cmath>
 #include "Vec3.h"
+
+const float PI = 3.14159265f;
 
 struct Mat4
 {
@@ -46,6 +49,19 @@ struct Mat4
 		mat4.m[0] = scale.x;
 		mat4.m[5] = scale.y;
 		mat4.m[10] = scale.z;
+
+		return mat4;
+	}
+
+	static Mat4 rotateZ(float rad)
+	{
+		float c = std::cos(rad);
+		float s = std::sin(rad);
+		Mat4 mat4 = identity();
+		mat4.m[0] = c;
+		mat4.m[1] = s;
+		mat4.m[4] = -s;
+		mat4.m[5] = c;
 
 		return mat4;
 	}

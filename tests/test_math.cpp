@@ -151,6 +151,22 @@ void testMat4()
 	assert(stVec3.z == 2.0f);
 	assert((translateMat4 * scaleMat4).m[12] == 1.0f);
 	assert((scaleMat4 * translateMat4).m[12] == 2.0f);
+	Vec3 rot90X = transformPoint(Mat4::rotateZ(PI / 2), Vec3(1, 0, 0));
+	assert(nearlyEqual(rot90X.x, 0.0f));
+	assert(nearlyEqual(rot90X.y, 1.0f));
+	assert(nearlyEqual(rot90X.z, 0.0f));
+	Vec3 rot90Y = transformPoint(Mat4::rotateZ(PI / 2), Vec3(0, 1, 0));
+	assert(nearlyEqual(rot90Y.x, -1.0f));
+	assert(nearlyEqual(rot90Y.y, 0.0f));
+	assert(nearlyEqual(rot90Y.z, 0.0f));
+	Vec3 rot90Z = transformPoint(Mat4::rotateZ(PI / 2), Vec3(0, 0, 1));
+	assert(nearlyEqual(rot90Z.x, 0.0f));
+	assert(nearlyEqual(rot90Z.y, 0.0f));
+	assert(nearlyEqual(rot90Z.z, 1.0f));
+	Vec3 rot60X = transformPoint(Mat4::rotateZ(PI / 3), Vec3(1, 0, 0));
+	assert(nearlyEqual(rot60X.x, 0.5f));
+	assert(nearlyEqual(rot60X.y, 0.8660254f));
+	assert(nearlyEqual(rot60X.z, 0.0f));
 
 }
 

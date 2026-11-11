@@ -39,6 +39,16 @@ struct Mat4
 
 		return mat4;
 	}
+
+	static Mat4 scale(Vec3 scale)
+	{
+		Mat4 mat4 = identity();
+		mat4.m[0] = scale.x;
+		mat4.m[5] = scale.y;
+		mat4.m[10] = scale.z;
+
+		return mat4;
+	}
 };
 
 inline Mat4 operator* (const Mat4& a, const Mat4& b)

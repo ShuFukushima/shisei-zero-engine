@@ -135,6 +135,22 @@ void testMat4()
 	assert(idenTransVec3.x == 4.0f);
 	assert(idenTransVec3.y == 5.0f);
 	assert(idenTransVec3.z == 6.0f);
+	Vec3 scaleVec3 = transformPoint(Mat4::scale(Vec3(2, 3, 4)), Vec3(1, 1, 1));
+	assert(scaleVec3.x == 2.0f);
+	assert(scaleVec3.y == 3.0f);
+	assert(scaleVec3.z == 4.0f);
+	Mat4 translateMat4 = Mat4::translate(Vec3(1, 0, 0));
+	Mat4 scaleMat4 = Mat4::scale(Vec3(2, 2, 2));
+	Vec3 tsVec3 = transformPoint(translateMat4 * scaleMat4, Vec3(1, 1, 1));
+	assert(tsVec3.x == 3.0f);
+	assert(tsVec3.y == 2.0f);
+	assert(tsVec3.z == 2.0f);
+	Vec3 stVec3 = transformPoint(scaleMat4 * translateMat4, Vec3(1, 1, 1));
+	assert(stVec3.x == 4.0f);
+	assert(stVec3.y == 2.0f);
+	assert(stVec3.z == 2.0f);
+	assert((translateMat4 * scaleMat4).m[12] == 1.0f);
+	assert((scaleMat4 * translateMat4).m[12] == 2.0f);
 
 }
 

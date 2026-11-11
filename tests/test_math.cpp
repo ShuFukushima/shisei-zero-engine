@@ -123,6 +123,19 @@ void testMat4()
 	Mat4 g2 = g * g;
 	assert(g2.m[0] == 90.0f);
 	assert(g2.m[5] == 228.0f);
+	Mat4 transMat4 = Mat4::translate(Vec3(1, 2, 3));
+	assert(transMat4.m[12] == 1.0f);
+	assert(transMat4.m[13] == 2.0f);
+	assert(transMat4.m[14] == 3.0f);
+	Vec3 transVec3 = transformPoint(transMat4, Vec3(4, 5, 6));
+	assert(transVec3.x == 5.0f);
+	assert(transVec3.y == 7.0f);
+	assert(transVec3.z == 9.0f);
+	Vec3 idenTransVec3 = transformPoint(Mat4::identity(), Vec3(4, 5, 6));
+	assert(idenTransVec3.x == 4.0f);
+	assert(idenTransVec3.y == 5.0f);
+	assert(idenTransVec3.z == 6.0f);
+
 }
 
 int main()

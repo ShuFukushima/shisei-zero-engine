@@ -1,4 +1,5 @@
 #pragma once
+#include "Vec3.h"
 
 struct Mat4
 {
@@ -28,6 +29,16 @@ struct Mat4
 
 		return mat4;
 	}
+
+	static Mat4 translate(Vec3 trans)
+	{
+		Mat4 mat4 = identity();
+		mat4.m[12] = trans.x;
+		mat4.m[13] = trans.y;
+		mat4.m[14] = trans.z;
+
+		return mat4;
+	}
 };
 
 inline Mat4 operator* (const Mat4& a, const Mat4& b)
@@ -48,4 +59,20 @@ inline Mat4 operator* (const Mat4& a, const Mat4& b)
 	}
 
 	return returnMat4;
+}
+
+inline Vec3 transformPoint(const Mat4& mat4, const Vec3& vec3)
+{
+	float vecArray[] = { vec3.x, vec3.y, vec3.z, 1 };
+	float retArray[] = { 0, 0, 0 };
+	
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			retArray[i] += mat4.m[j * 4 + i] * vecArray[j];
+		}
+	}
+
+	return Vec3(retArray[0], retArray[1], retArray[2]);
 }

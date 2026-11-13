@@ -61,3 +61,13 @@ target_include_directories(math-tests PRIVATE src)
 if (MSVC)
     target_compile_options(math-tests PRIVATE /utf-8)
 endif()
+
+# (ここから下は、コメントも AI が書いた。自分の言葉に直したら、この1行は消してよい)
+# src/ の .h を書き換えたら、それを使う .cpp を作り直す、とビルドに直接教える。
+# ふつうはコンパイラの出力から自動で分かるが、構成したときとビルドするときで
+# コンソールの文字コードが違うと読み取れず、.h だけ直しても exe が古いままになるため。
+file(GLOB ZERO_HEADERS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.h)
+foreach(zero_target shisei-zero math-tests)
+    get_target_property(zero_sources ${zero_target} SOURCES)
+    set_source_files_properties(${zero_sources} PROPERTIES OBJECT_DEPENDS "${ZERO_HEADERS}")
+endforeach()

@@ -48,7 +48,6 @@ cmake がPATHにある環境なら `cmake -S . -B build && cmake --build build` 
 - OpenGL や GLFW の呼び出しの作法は、AIが教材として示した見本を見ながら打っている
 - 3D数学、OBJの読み込み、エンジンの組み立て方は、式と関数の形だけを教わり、中身は自分で書いている(詰まって関数1つ分を見せてもらったときは、下の台帳に記録している)
 - 作業台（ビルド設定・依存取得・梱包・検証の配管）はAI提供可。ゲームロジックや `src/` へ取り込むコードは作業台に含めない
-- 理解した内容は [docs/interview-qa.md](docs/interview-qa.md) に自分の言葉で記録する
 - AIの関与は [docs/disclosure-log.md](docs/disclosure-log.md) のコミット単位台帳に、対象ファイルと箇所が分かる粒度で記録する
 - 運用ルールの全文は [AGENTS.md](AGENTS.md)
 

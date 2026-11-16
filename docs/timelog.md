@@ -103,6 +103,7 @@
 | 2026-11-11 | M2 第52回(後半)(完了) | 学習 | 0.5h | なし(申告は30分。src/Mat4.h に scale を書き、tests/test_math.cpp の testMat4 で、拡大した点と、掛ける順を変えた T * S と S * T を assert で確かめた) |
 | 2026-11-11 | M2 第52回(前半)(完了) | 学習 | 0.75h | なし(申告は46分。src/Mat4.h に translate と transformPoint を書き、tests/test_math.cpp の testMat4 で、行列の中身と、動いた点と動かない点を assert で確かめた) |
 | 2026-11-11 | M2 第51回(後半)(完了) | 学習 | 0.5h | なし(申告は30分。src/Mat4.h に Mat4 どうしの operator* を書き、tests/test_math.cpp の testMat4 で A B と B A、0 と 1 ではない数の表 g を assert で確かめた) |
+| 2026-11-16 | 新方式 01 四角を自分の行列で動かす・回す(完了) | 学習 | 0.75h | T * R と R * T の手計算で、行列の積の4列目の成分が1つ抜けていた(申告は45分。src/main.cpp で行列を uniform で送り、2つの四角を別々の行列で描いた) |
 
 記帳規則:
 

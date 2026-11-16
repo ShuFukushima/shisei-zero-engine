@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION	// この行がないとstb_image内のヘッダーだけ読まれる
 #include "stb_image.h"
+#include "Mat4.h"
 
 using namespace std;
 
@@ -171,9 +172,11 @@ layout (location = 1) in vec2 texturePos;
 
 out vec2 texturePosOut;
 
+uniform mat4 modelMatrix;
+
 void main()
 {
-	gl_Position = vec4(vertexInput, 1.0);
+	gl_Position = modelMatrix * vec4(vertexInput, 1.0);
 
 	texturePosOut = texturePos;
 }
@@ -289,6 +292,10 @@ void main()
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
 
+	// シェーダープログラムのuniformに値を入れる
+	GLint modelMatrixLocation = glGetUniformLocation(shaderProgramID, "modelMatrix");
+	cout << "modelMatrix location : " << modelMatrixLocation << endl;
+
 	// VAO（VBOをどう読めばいいか）を作成し、バインドする
 	GLuint vaoID = 0;
 	glGenVertexArrays(1, &vaoID);
@@ -377,13 +384,26 @@ void main()
 		// ----- update -----
 		// ループ回数を増やす
 		frameCount++;
-
 		// 時間に応じて赤の強さを変える
 		double loopTime = glfwGetTime();
 		double sinValue = (sin(loopTime) * 0.5) + 0.5;
 		redValue = (float)sinValue;
 		// 時間に応じて行き来するfloat
 		float blueValue = (float)sinValue;
+		// 時間に応じて行き来するxの値（行列作成時用）
+		float xValue = (float)sinValue + -0.5f;
+
+		// 画像を変換するための4×4の行列を作成
+		// 回転時の歪みを修正するための行列
+		Mat4 modifyMatrix = Mat4::scale(Vec3(0.75f, 1.0f, 1.0f));
+		// 平行移動させるための行列
+		Mat4 translateMatrix = Mat4::translate(Vec3(1.0f, 0.0f, 0.0f));
+		// Z軸回転させるための行列
+		Mat4 rotateMatrix = Mat4::rotateZ(loopTime);
+		// 拡大縮小させるための行列
+		Mat4 scaleMatrix = Mat4::scale(Vec3(0.5f, 0.5f, 0.5f));
+
+		Mat4 modelMatrix1 = modifyMatrix * rotateMatrix;
 
 		// ----- render -----
 		// 塗りつぶす色を設定する
@@ -398,12 +418,23 @@ void main()
 		// 使用するシェーダープログラムを指定する
 		glUseProgram(shaderProgramID);
 
+		// 使用するシェーダープログラムに回転させるための行列を送る
+		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix1.m);
+
 		// シェーダープログラムの色を実際にC++から変更する
 		//glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
 
 		// 三角形を描画する
 		// glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		// 矩形を描画する
+		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
+		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
+
+		// もう一つ矩形を描画する
+		Mat4 modelMatrix2 = modifyMatrix * rotateMatrix * translateMatrix * scaleMatrix * rotateMatrix;
+		// 使用するシェーダープログラムに回転させるための行列を送る
+		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix2.m);
 		// 矩形を描画する
 		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);

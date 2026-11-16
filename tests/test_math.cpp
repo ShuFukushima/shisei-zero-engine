@@ -167,6 +167,18 @@ void testMat4()
 	assert(nearlyEqual(rot60X.x, 0.5f));
 	assert(nearlyEqual(rot60X.y, 0.8660254f));
 	assert(nearlyEqual(rot60X.z, 0.0f));
+	Mat4 translateMat = Mat4::translate(Vec3(0.5f, 0.0f, 0.0f));
+	Mat4 rotateMat4 = Mat4::rotateZ(PI / 2);
+	Mat4 transRot = translateMat * rotateMat4;
+	Mat4 rotTrans = rotateMat4 * translateMat;
+	Vec3 transRotVec = transformPoint(transRot, Vec3(0.0f, 0.0f, 0.0f));
+	assert(nearlyEqual(transRotVec.x, 0.5f));
+	assert(nearlyEqual(transRotVec.y, 0.0f));
+	assert(nearlyEqual(transRotVec.z, 0.0f));
+	Vec3 rotTransVec = transformPoint(rotTrans, Vec3(0.0f, 0.0f, 0.0f));
+	assert(nearlyEqual(rotTransVec.x, 0.0f));
+	assert(nearlyEqual(rotTransVec.y, 0.5f));
+	assert(nearlyEqual(rotTransVec.z, 0.0f));
 
 }
 

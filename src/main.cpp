@@ -173,10 +173,11 @@ layout (location = 1) in vec2 texturePos;
 out vec2 texturePosOut;
 
 uniform mat4 modelMatrix;
+uniform mat4 projectionMatrix;
 
 void main()
 {
-	gl_Position = modelMatrix * vec4(vertexInput, 1.0);
+	gl_Position = projectionMatrix * modelMatrix * vec4(vertexInput, 1.0);
 
 	texturePosOut = texturePos;
 }
@@ -295,6 +296,8 @@ void main()
 	// シェーダープログラムのuniformに値を入れる
 	GLint modelMatrixLocation = glGetUniformLocation(shaderProgramID, "modelMatrix");
 	cout << "modelMatrix location : " << modelMatrixLocation << endl;
+	GLint projectionMatrixLocation = glGetUniformLocation(shaderProgramID, "projectionMatrix");
+	cout << "projectionMatrix location : " << projectionMatrixLocation << endl;
 
 	// VAO（VBOをどう読めばいいか）を作成し、バインドする
 	GLuint vaoID = 0;
@@ -372,6 +375,7 @@ void main()
 	// メインループ（glfwWindowShouldClose()が0ならループ）
 	int frameCount = 0;	// ループ回数を数える変数
 	float redValue = 0.0f;	// 赤色の強さ（0～1）
+	float aspect = 1.0f;	// フレームごとのウィンドウサイズ
 
 	// -----ここから毎フレーム-----
 
@@ -384,6 +388,13 @@ void main()
 		// ----- update -----
 		// ループ回数を増やす
 		frameCount++;
+		// ウィンドウの大きさを調査する
+		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+		// 高さが0の時に割らないようにする
+		if (windowHeight != 0)
+		{
+			aspect = (float)windowWidth / (float)windowHeight;
+		}
 		// 時間に応じて赤の強さを変える
 		double loopTime = glfwGetTime();
 		double sinValue = (sin(loopTime) * 0.5) + 0.5;
@@ -403,7 +414,10 @@ void main()
 		// 拡大縮小させるための行列
 		Mat4 scaleMatrix = Mat4::scale(Vec3(0.5f, 0.5f, 0.5f));
 
-		Mat4 modelMatrix1 = modifyMatrix * rotateMatrix;
+		Mat4 modelMatrix1 = Mat4::translate(Vec3(0.0f, 0.0f, -2.0f)) * Mat4::rotateY(loopTime);
+
+		// 使用するシェーダープログラムに送るための射影行列を作成
+		Mat4 projectionMatrix = Mat4::perspective(PI / 3.0f, aspect, 0.1f, 100.0f);
 
 		// ----- render -----
 		// 塗りつぶす色を設定する
@@ -421,6 +435,9 @@ void main()
 		// 使用するシェーダープログラムに回転させるための行列を送る
 		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix1.m);
 
+		// 使用するシェーダープログラムに射影変換するための行列を送る
+		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMatrix.m);
+
 		// シェーダープログラムの色を実際にC++から変更する
 		//glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
 
@@ -432,9 +449,11 @@ void main()
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
 
 		// もう一つ矩形を描画する
-		Mat4 modelMatrix2 = modifyMatrix * rotateMatrix * translateMatrix * scaleMatrix * rotateMatrix;
+		Mat4 modelMatrix2 = Mat4::translate(Vec3(0.0f, 0.0f, -4.0f)) * Mat4::rotateZ(loopTime);
 		// 使用するシェーダープログラムに回転させるための行列を送る
 		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix2.m);
+		// 使用するシェーダープログラムに射影変換するための行列を送る
+		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMatrix.m);
 		// 矩形を描画する
 		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);

@@ -179,6 +179,36 @@ void testMat4()
 	assert(nearlyEqual(rotTransVec.x, 0.0f));
 	assert(nearlyEqual(rotTransVec.y, 0.5f));
 	assert(nearlyEqual(rotTransVec.z, 0.0f));
+	Mat4 projectMat4 = Mat4::identity();
+	projectMat4.m[11] = -1.0f;
+	projectMat4.m[15] = 0.0f;
+	Vec3 nearVec = projectPoint(projectMat4, Vec3(2.0f, 4.0f, -2.0f));
+	assert(nearVec.x == 1.0f);
+	assert(nearVec.y == 2.0f);
+	assert(nearVec.z == -1.0f);
+	Vec3 farVec = projectPoint(projectMat4, Vec3(2.0f, 4.0f, -4.0f));
+	assert(farVec.x == 0.5f);
+	assert(farVec.y == 1.0f);
+	assert(farVec.z == -1.0f);
+	Mat4 transProjMat4 = Mat4::translate(Vec3(1.0f, 2.0f, 3.0f));
+	Vec3 procPointVec3 = projectPoint(transProjMat4, Vec3(4.0f, 5.0f, 6.0f));
+	Vec3 transPointVec3 = transformPoint(transProjMat4, Vec3(4.0f, 5.0f, 6.0f));
+	assert(procPointVec3.x == transPointVec3.x);
+	assert(procPointVec3.y == transPointVec3.y);
+	assert(procPointVec3.z == transPointVec3.z);
+	Mat4 perMat4 = Mat4::perspective(PI / 2.0f, 1.0f, 1.0f, 3.0f);
+	assert(nearlyEqual(projectPoint(perMat4,Vec3(0.0f, 0.0f, -1.0f)), Vec3(0.0f, 0.0f, -1.0f)));
+	assert(nearlyEqual(projectPoint(perMat4, Vec3(0.0f, 0.0f, -3.0f)), Vec3(0.0f, 0.0f, 1.0f)));
+	assert(nearlyEqual(projectPoint(perMat4, Vec3(1.0f, 1.0f, -2.0f)), Vec3(0.5f, 0.5f, 0.5f)));
+	Mat4 perMat4_2 = Mat4::perspective(PI / 2.0f, 2.0f, 1.0f, 3.0f);
+	assert(nearlyEqual(projectPoint(perMat4_2, Vec3(2.0f, 1.0f, -1.0f)), Vec3(1.0f, 1.0f, -1.0f)));
+	Mat4 rotateYMat4 = Mat4::rotateY(PI / 2);
+	Vec3 transRotVec_X = projectPoint(rotateYMat4, Vec3(1.0f, 0.0f, 0.0f));
+	Vec3 transRotVec_Y = projectPoint(rotateYMat4, Vec3(0.0f, 0.0f, 1.0f));
+	Vec3 transRotVec_Z = projectPoint(rotateYMat4, Vec3(0.0f, 1.0f, 0.0f));
+	assert(nearlyEqual(transRotVec_X, Vec3(0.0f, 0.0f, -1.0f)));
+	assert(nearlyEqual(transRotVec_Y, Vec3(1.0f, 0.0f, 0.0f)));
+	assert(nearlyEqual(transRotVec_Z, Vec3(0.0f, 1.0f, 0.0f)));
 
 }
 

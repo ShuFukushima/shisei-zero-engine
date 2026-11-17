@@ -81,6 +81,18 @@ inline bool nearlyEqual(float a, float b)
 	}
 }
 
+inline bool nearlyEqual(const Vec3& a, const Vec3& b)
+{
+	if (std::fabs(a.x - b.x) < 0.00001f && std::fabs(a.y - b.y) < 0.00001f && std::fabs(a.z - b.z) < 0.00001f)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 inline Vec3 normalize(const Vec3& a)
 {
 	float length = a.length();

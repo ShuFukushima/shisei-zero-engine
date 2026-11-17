@@ -65,6 +65,35 @@ struct Mat4
 
 		return mat4;
 	}
+
+	static Mat4 rotateY(float rad)
+	{
+		float c = std::cos(rad);
+		float s = std::sin(rad);
+		Mat4 mat4 = identity();
+		mat4.m[0] = c;
+		mat4.m[2] = -s;
+		mat4.m[8] = s;
+		mat4.m[10] = c;
+
+		return mat4;
+	}
+
+	static Mat4 perspective(float fovY, float aspect, float nearZ, float farZ)
+	{
+		float f = 1.0f / tan(fovY / 2.0f);
+		float A = (farZ + nearZ) / (nearZ - farZ);
+		float B = 2.0f * farZ * nearZ / (nearZ - farZ);
+		Mat4 mat4 = identity();
+		mat4.m[0] = f / aspect;
+		mat4.m[5] = f;
+		mat4.m[10] = A;
+		mat4.m[11] = -1.0f;
+		mat4.m[14] = B;
+		mat4.m[15] = 0;
+
+		return mat4;
+	}
 };
 
 inline Mat4 operator* (const Mat4& a, const Mat4& b)
@@ -99,6 +128,26 @@ inline Vec3 transformPoint(const Mat4& mat4, const Vec3& vec3)
 			retArray[i] += mat4.m[j * 4 + i] * vecArray[j];
 		}
 	}
+
+	return Vec3(retArray[0], retArray[1], retArray[2]);
+}
+
+inline Vec3 projectPoint(const Mat4& mat4, const Vec3& vec3)
+{
+	float vecArray[] = { vec3.x, vec3.y, vec3.z, 1 };
+	float retArray[] = { 0, 0, 0, 0 };
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			retArray[i] += mat4.m[j * 4 + i] * vecArray[j];
+		}
+	}
+
+	retArray[0] /= retArray[3];
+	retArray[1] /= retArray[3];
+	retArray[2] /= retArray[3];
 
 	return Vec3(retArray[0], retArray[1], retArray[2]);
 }

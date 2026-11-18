@@ -209,6 +209,11 @@ void testMat4()
 	assert(nearlyEqual(transRotVec_X, Vec3(0.0f, 0.0f, -1.0f)));
 	assert(nearlyEqual(transRotVec_Y, Vec3(1.0f, 0.0f, 0.0f)));
 	assert(nearlyEqual(transRotVec_Z, Vec3(0.0f, 1.0f, 0.0f)));
+	Mat4 rotateXMat4 = Mat4::rotateX(PI / 2);
+	transRotVec_Y = projectPoint(rotateXMat4, Vec3(0.0f, 1.0f, 0.0f));
+	transRotVec_Z = projectPoint(rotateXMat4, Vec3(0.0f, 0.0f, 1.0f));
+	assert(nearlyEqual(transRotVec_Y, Vec3(0.0f, 0.0f, 1.0f)));
+	assert(nearlyEqual(transRotVec_Z, Vec3(0.0f, -1.0f, 0.0f)));
 
 }
 

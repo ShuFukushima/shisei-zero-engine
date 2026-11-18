@@ -79,6 +79,19 @@ struct Mat4
 		return mat4;
 	}
 
+	static Mat4 rotateX(float rad)
+	{
+		float c = std::cos(rad);
+		float s = std::sin(rad);
+		Mat4 mat4 = identity();
+		mat4.m[5] = c;
+		mat4.m[6] = s;
+		mat4.m[9] = -s;
+		mat4.m[10] = c;
+
+		return mat4;
+	}
+
 	static Mat4 perspective(float fovY, float aspect, float nearZ, float farZ)
 	{
 		float f = 1.0f / tan(fovY / 2.0f);

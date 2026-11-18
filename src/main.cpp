@@ -138,13 +138,38 @@ int main()
 
 	// 頂点配列を格納する（位置が3つ、テクスチャ座標2つ）
 	float vertexArray[] = {
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 0.0f,	// ここから背面
+		-0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,	// ここから右面
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,	// ここから左面
+		-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,	// ここから上面
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,	// ここから底面
+		-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 1.0f
 	};
 	
-	unsigned int triangleVer[6] = { 0, 1, 2, 0, 2, 3 };
+	unsigned int triangleVer[36] = { 0, 1, 2, 0, 2, 3,
+		4, 5, 6, 4, 6, 7,
+		8, 9, 10, 8, 10, 11,
+		12, 13, 14, 12, 14, 15,
+		16, 17, 18, 16, 18, 19,
+		20, 21, 22, 20, 22, 23};
 
 	// 配列全体のバイト数を出力
 	cout << "vertex array bytes : " << sizeof(vertexArray) << endl;
@@ -377,6 +402,9 @@ void main()
 	float redValue = 0.0f;	// 赤色の強さ（0～1）
 	float aspect = 1.0f;	// フレームごとのウィンドウサイズ
 
+	// 深度によって捨てるという処理を始める
+	glEnable(GL_DEPTH_TEST);
+
 	// -----ここから毎フレーム-----
 
 	while (!glfwWindowShouldClose(window))
@@ -414,7 +442,7 @@ void main()
 		// 拡大縮小させるための行列
 		Mat4 scaleMatrix = Mat4::scale(Vec3(0.5f, 0.5f, 0.5f));
 
-		Mat4 modelMatrix1 = Mat4::translate(Vec3(0.0f, 0.0f, -2.0f)) * Mat4::rotateY(loopTime);
+		Mat4 modelMatrix1 = Mat4::rotateZ(loopTime) * Mat4::translate(Vec3(0.5f, 0.0f, -3.0f)) * Mat4::rotateX(loopTime * 0.7f) * Mat4::rotateY(loopTime);
 
 		// 使用するシェーダープログラムに送るための射影行列を作成
 		Mat4 projectionMatrix = Mat4::perspective(PI / 3.0f, aspect, 0.1f, 100.0f);
@@ -423,8 +451,8 @@ void main()
 		// 塗りつぶす色を設定する
 		glClearColor(redValue, 0.5f, 0.5f, 1.0f);
 
-		// ウィンドウを塗りつぶす
-		glClear(GL_COLOR_BUFFER_BIT);
+		// ウィンドウの色の表と深度情報の両方を消す
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// | →これは2つの印を1つにまとめる書き方
 
 		// 念のためもう一度使用するテクスチャをバインドする
 		glBindTexture(GL_TEXTURE_2D, imageTexID);
@@ -438,22 +466,19 @@ void main()
 		// 使用するシェーダープログラムに射影変換するための行列を送る
 		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMatrix.m);
 
-		// シェーダープログラムの色を実際にC++から変更する
-		//glUniform4f(fragmentVarNum, 0.0, 0.5f, blueValue, 1.0);
-
-		// 三角形を描画する
-		// glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		// 矩形を描画する
+		// 箱を描画する
 		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
 
-		// もう一つ矩形を描画する
-		Mat4 modelMatrix2 = Mat4::translate(Vec3(0.0f, 0.0f, -4.0f)) * Mat4::rotateZ(loopTime);
+		// 2つ目の箱を描画
+		// モデルを動かす行列を作成
+		Mat4 modelMatrix2 = modelMatrix1 * Mat4::rotateX(PI / 4.0f) * Mat4::rotateY(PI / 4.0f);
 		// 使用するシェーダープログラムに回転させるための行列を送る
 		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix2.m);
+
 		// 使用するシェーダープログラムに射影変換するための行列を送る
 		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMatrix.m);
+
 		// 矩形を描画する
 		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);

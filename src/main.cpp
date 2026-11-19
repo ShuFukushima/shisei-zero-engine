@@ -436,14 +436,25 @@ void main()
 		// 回転時の歪みを修正するための行列
 		Mat4 modifyMatrix = Mat4::scale(Vec3(0.75f, 1.0f, 1.0f));
 		// 平行移動させるための行列
-		Mat4 translateMatrix = Mat4::translate(Vec3(1.0f, 0.0f, 0.0f));
+		Mat4 translateMatrix = Mat4::translate(Vec3(0.0f, 0.0f, -5.0f));
 		// Z軸回転させるための行列
 		Mat4 rotateMatrix = Mat4::rotateZ(loopTime);
 		// 拡大縮小させるための行列
 		Mat4 scaleMatrix = Mat4::scale(Vec3(0.5f, 0.5f, 0.5f));
 
-		Mat4 modelMatrix1 = Mat4::rotateZ(loopTime) * Mat4::translate(Vec3(0.5f, 0.0f, -3.0f)) * Mat4::rotateX(loopTime * 0.7f) * Mat4::rotateY(loopTime);
+		Mat4 modelMatrix1 = translateMatrix * Mat4::rotateY(loopTime);
 
+		// 2つ目の箱の行列
+		translateMatrix = Mat4::translate(Vec3(2.0f, 0.0f, 0.0f));
+		Mat4 translateMatrix2 = Mat4::translate(Vec3(0.0f, 0.0f, -5.0f));
+		// モデルを動かす行列を作成
+		Mat4 modelMatrix2 =translateMatrix2 * Mat4::rotateY(loopTime) * translateMatrix * Mat4::rotateX(loopTime) * scaleMatrix;
+
+		// 3つ目の箱の行列
+		translateMatrix = Mat4::translate(Vec3(5.0f, 0.0f, -20.0f));
+		scaleMatrix = Mat4::scale(Vec3(4.0f, 4.0f, 4.0f));
+		Mat4 modelMatrix3 = translateMatrix * scaleMatrix;
+		
 		// 使用するシェーダープログラムに送るための射影行列を作成
 		Mat4 projectionMatrix = Mat4::perspective(PI / 3.0f, aspect, 0.1f, 100.0f);
 
@@ -471,10 +482,19 @@ void main()
 		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
 
 		// 2つ目の箱を描画
-		// モデルを動かす行列を作成
-		Mat4 modelMatrix2 = modelMatrix1 * Mat4::rotateX(PI / 4.0f) * Mat4::rotateY(PI / 4.0f);
 		// 使用するシェーダープログラムに回転させるための行列を送る
 		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix2.m);
+
+		// 使用するシェーダープログラムに射影変換するための行列を送る
+		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMatrix.m);
+
+		// 矩形を描画する
+		// EBOに入っている番号を前から読み、その順で頂点を使って三角形を出す
+		glDrawElements(GL_TRIANGLES, sizeof(triangleVer) / sizeof(int), GL_UNSIGNED_INT, (void*)0);
+
+		// 3つ目の箱を描画
+		// 使用するシェーダープログラムに回転させるための行列を送る
+		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMatrix3.m);
 
 		// 使用するシェーダープログラムに射影変換するための行列を送る
 		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMatrix.m);
